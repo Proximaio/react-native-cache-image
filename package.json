@@ -1,11 +1,11 @@
 {
-    "name": "@remobile/react-native-cache-image",
-        "version": "1.0.0",
+    "name": "react-native-cache-image",
+        "version": "1.0.1",
         "description": "A cache-image for react-native",
         "main": "index.js",
         "author": {
-            "name": "YunJiang.Fang",
-            "email": "42550564@qq.com"
+            "name": "James Littlejohn",
+            "email": "james@proxima.io"
         },
         "license": "MIT",
         "keywords": [
@@ -20,13 +20,13 @@
             "remobile",
             "mobile"
         ],
-        "homepage": "https://github.com/remobile/react-native-cache-image",
+        "homepage": "https://github.com/Proximaio/react-native-cache-image",
         "bugs": {
-            "url": "https://github.com/remobile/react-native-cache-image/issues"
+            "url": "https://github.com/Proximaio/react-native-cache-image/issues"
         },
         "repository": {
             "type": "git",
-            "url": "git://github.com/remobile/react-native-cache-image.git"
+            "url": "git://github.com/Proximaio/react-native-cache-image.git"
         },
         "peerDependencies": {
             "@remobile/react-native-sqlite": "^1.0.0",

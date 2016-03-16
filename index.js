@@ -16,7 +16,6 @@ var {
 
 
 var md5 = require("./md5.js");
-var image = require('./image.js');
 var StorageMgr = require('./storageMgr.js');
 var fs = require('react-native-fs');
 var TimerMixin = require('react-timer-mixin');
@@ -174,6 +173,7 @@ var CacheImage = React.createClass({
         });
     },
     downloadImage(url, filepath, cacheId, filename) {
+        console.log('downloadImage - url: %s, filepath: %s, cacheId: %s, filename: %s', url, filepath, cacheId, filename)
         var self = this;
         var ret =  fs.downloadFile(url, filepath).then(async (res)=>{
             self.setState({
@@ -186,6 +186,7 @@ var CacheImage = React.createClass({
             await self.checkCacheStorage(res.bytesWritten);
         }).catch(
             (err)=>{
+                console.warn('downloadImage - error: ' + err)
                 //console.log(err);
                 this.unlock();
                 self.setState({
@@ -193,9 +194,10 @@ var CacheImage = React.createClass({
                 });
             }
         );
+        console.log('downloadImage - ret: ' + ret)
     },
     checkImageSource(cacheId, url) {
-        var type = url.replace(/.*\.(.*)/, '$1');
+        var type = url.replace(/.*\.(.*)(?:\?\d*)/, '$1');
         var filename =  md5(url)+'.'+type;
         var filepath = storageMgr.getCacheFilePath(filename);
         this.param = {cacheId:cacheId, url:url, filename:filename, filepath:filepath};
@@ -221,8 +223,7 @@ var CacheImage = React.createClass({
         var {cacheId, url, filename, filepath} = this.param;
         this.lock();
         var isExist = await this.isFileExist(filepath);
-        //console.log(this.param);
-        //console.log('Is File exist', isExist);
+        console.log('doCheckImageSource - isExist: ' + isExist)
         if (isExist) {
             this.setState({
                 status:STATUS_LOADED,
@@ -252,25 +253,6 @@ var CacheImage = React.createClass({
     componentWillUnmount: function() {
         delete cacheIdMgr[this.props.cacheId];
     },
-    renderLoading() {
-        return (
-            <Image
-                {...this.props}
-                style={[this.props.style, {justifyContent:'center', alignItems:'center'}]}
-                source={this.props.defaultImage}
-                >
-                <Image
-                  style={styles.spinner}
-                  source={{
-                    uri: 'data:image/gif;base64,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',
-                    isStatic: true
-                  }}
-                >
-                </Image>
-                {this.props.children}
-            </Image>
-        );
-    },
     renderLocalFile() {
         return (
             <Image
@@ -282,9 +264,7 @@ var CacheImage = React.createClass({
         );
     },
     render() {
-        if (this.state.status === STATUS_LOADING) {
-            return this.renderLoading();
-        } else if (this.state.status === STATUS_LOADED) {
+        if (this.state.status === STATUS_LOADED) {
             return this.renderLocalFile();
         } else {
             return (
