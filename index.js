@@ -242,10 +242,6 @@ var CacheImage = React.createClass({
     },
     componentWillMount() {
         var {cacheId, url} = this.props;
-        if (cacheIdMgr[cacheId]) {
-            console.error('duplicate cacheId');
-            return;
-        }
         cacheIdMgr[cacheId] = true;
         this.setState({status:STATUS_LOADING});
         this.checkImageSource(cacheId, url);
