@@ -249,6 +249,16 @@ var CacheImage = React.createClass({
     componentWillUnmount: function() {
         delete cacheIdMgr[this.props.cacheId];
     },
+    renderDefault() {
+        return (
+          <Image
+              {...this.props}
+              source={this.props.defaultImage}
+              >
+              {this.props.children}
+          </Image>
+        );
+    },
     renderLocalFile() {
         return (
             <Image
@@ -260,17 +270,15 @@ var CacheImage = React.createClass({
         );
     },
     render() {
-        if (this.state.status === STATUS_LOADED) {
+        if (this.state.status === STATUS_LOADING) {
+            console.log('react-native-cache-image: Rendering default image while loading (cacheID: %s)', this.props.cacheId)
+            return this.renderDefault();
+        } else if (this.state.status === STATUS_LOADED) {
+            console.log('react-native-cache-image: Rendering actual image (cacheID: %s)', this.props.cacheId)
             return this.renderLocalFile();
         } else {
-            return (
-                <Image
-                    {...this.props}
-                    source={this.props.defaultImage}
-                    >
-                    {this.props.children}
-                </Image>
-            )
+            console.log('react-native-cache-image: Something went wrong, rendering default (cacheID: %s)', this.props.cacheId)
+            return this.renderDefault();
         }
     },
 });
